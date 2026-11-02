@@ -135,11 +135,36 @@ Other operating systems and Python versions should not be treated as release-cer
 
 ## Installation and Getting Started
 
-LEAF is currently distributed as a Python source-code project.
-It remains under active development, and a standalone application
-installer or executable is not yet available.
+LEAF is available as a standalone Windows x64 development build and as a Python source-code project.
 
-### Prerequisites
+### Option A — Windows standalone application
+
+**Platform:** Windows x64 (64-bit).
+
+The Windows release bundles the Python runtime and required application dependencies, including RocketCEA. Users do not need to install Python, RocketCEA, pip or a compiler separately.
+
+1. Open the [LEAF GitHub Releases page](https://github.com/liatho8913/LEAF---Liquid-propulsion-Engine-Analysis-and-design-Framework-/releases).
+2. Download the Windows release archive named `LEAF_v0.5.2-dev_Windows_x64_RC2.zip`, if published.
+3. Extract the ZIP archive completely to a folder of your choice.
+4. Open the extracted `LEAF` folder.
+5. Double-click `LEAF.exe` to launch the application.
+
+**Important:** Keep `LEAF.exe` and the accompanying `_internal` folder together. Do not run the executable directly from inside the compressed ZIP archive.
+
+LEAF stores writable application data, projects, designs and module activation settings under `%LOCALAPPDATA%\LEAF`.
+
+The Windows x64 release has been tested on the development machine, including extraction, application launch, module activation, engineering calculations and project save/reload. Testing on a separate clean Windows installation remains outstanding. Compatibility with every Windows configuration is therefore not guaranteed.
+
+The Windows archive is a development release, not an installer. It has not been code-signed; Windows may display a security warning. Only download releases from the project's official GitHub repository and verify their provenance before running them.
+
+**Do not select GitHub's `Code → Download ZIP` if you want the standalone Windows application.** That option downloads the source-code repository, not the packaged executable. Use the release asset instead.
+
+
+### Option B — Install from source (developers)
+
+Source installation is intended for users who want to inspect, modify or develop LEAF.
+
+#### Prerequisites
 
 Before installing LEAF, ensure you have:
 
@@ -152,7 +177,7 @@ RocketCEA contains compiled native components and may require
 additional system libraries or development tools, depending on
 the operating system.
 
-### Step 1 — Download LEAF
+#### Step 1 — Download LEAF
 
 Clone the repository with Git:
 
@@ -171,7 +196,7 @@ Alternatively:
 All subsequent commands must be executed from the repository
 root, which contains `requirements.txt` and the `leaf_qt` directory.
 
-### Step 2 — Create a Python virtual environment
+#### Step 2 — Create a Python virtual environment
 
 A virtual environment keeps LEAF's Python dependencies separate
 from other software installed on your computer.
@@ -197,7 +222,7 @@ security settings unnecessarily.
 Once activated, the virtual environment should be used for
 the remaining installation and launch commands.
 
-### Step 3 — Install Python dependencies
+#### Step 3 — Install Python dependencies
 
 With the virtual environment active, run:
 
@@ -218,7 +243,7 @@ runtime support, including `libgfortran`.
 If an installation fails, inspect the dependency error before
 attempting to change package versions.
 
-### Step 4 — Launch LEAF
+#### Step 4 — Launch LEAF
 
 From the repository root, with the virtual environment active:
 
@@ -247,7 +272,7 @@ python -m leaf_qt.main
 python -m leaf_qt.main
 ```
 
-### Platform Compatibility
+#### Platform Compatibility
 
 | Platform | Installation status |
 |---|---|
@@ -258,7 +283,7 @@ python -m leaf_qt.main
 A successful installation and application launch do not establish
 full engineering verification of every analysis module.
 
-### Initial Use
+#### Initial Use
 
 After launching LEAF:
 
@@ -275,7 +300,7 @@ Its saved project and design files may not be included in a fresh
 clone if they are excluded from repository distribution.
 Do not assume this example can be loaded without those files.
 
-### Engineering Disclaimer
+#### Engineering Disclaimer
 
 LEAF is experimental engineering software, intended for
 research, learning and preliminary analysis.

@@ -37,11 +37,43 @@ class ModuleRuntimeIntegrationResult:
 class ModuleRuntimeIntegrator:
     INTEGRATOR_OWNER = "leaf_qt.module_engine.module_runtime_integrator.ModuleRuntimeIntegrator"
 
-    def __init__(self, definition_dir: Path):
+    def __init__(self, definition_dir: Path, activation_file: Path | None = None):
         self.definition_dir = Path(definition_dir)
+        self.activation_file = (
+            Path(activation_file) if activation_file is not None else None
+        )
         self.definition_loader = ModuleDefinitionLoader(self.definition_dir)
         self.contract_builder = ModuleContractBuilder(self.definition_dir)
         self.verification_builder = ModuleVerificationBuilder(self.definition_dir)
+
+    def _activation_overrides(self) -> dict[str, bool]:
+        if self.activation_file is None or not self.activation_file.exists():
+            return {}
+
+        data = json.loads(self.activation_file.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            raise ValueError("Module activation configuration must be an object.")
+
+        if not all(
+            isinstance(key, str) and isinstance(value, bool)
+            for key, value in data.items()
+        ):
+            raise ValueError("Module activation entries must map IDs to booleans.")
+
+        return data
+
+    def _write_activation_overrides(self, overrides: dict[str, bool]) -> None:
+        self.activation_file.parent.mkdir(parents=True, exist_ok=True)
+        temporary = self.activation_file.with_suffix(".tmp")
+
+        try:
+            temporary.write_text(
+                json.dumps(overrides, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            temporary.replace(self.activation_file)
+        finally:
+            temporary.unlink(missing_ok=True)
 
     def _definition_path(self, module_id: str) -> Path:
         return self.definition_loader.definition_path(
@@ -67,9 +99,14 @@ class ModuleRuntimeIntegrator:
                 "reason": before.activation_reason,
             }
 
-        data = json.loads(path.read_text(encoding="utf-8"))
-        data["enabled"] = bool(enabled)
-        path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+        if self.activation_file is None:
+            data = json.loads(path.read_text(encoding="utf-8"))
+            data["enabled"] = bool(enabled)
+            path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+        else:
+            overrides = self._activation_overrides()
+            overrides[module_id] = bool(enabled)
+            self._write_activation_overrides(overrides)
 
         after = self.build_manifest().records[module_id]
         return {
@@ -81,10 +118,14 @@ class ModuleRuntimeIntegrator:
         }
 
     def _activation_states(self, contracts: dict[str, Any]) -> dict[str, tuple[str, str]]:
+        overrides = self._activation_overrides()
         states = {
             module_id: (
-                ACTIVE if getattr(contract, "enabled", True) else USER_DEACTIVATED,
-                "Module enabled." if getattr(contract, "enabled", True) else "User disabled this module in its module definition.",
+                ACTIVE if overrides.get(module_id, getattr(contract, "enabled", True))
+                else USER_DEACTIVATED,
+                "Module enabled."
+                if overrides.get(module_id, getattr(contract, "enabled", True))
+                else "User disabled this module.",
             )
             for module_id, contract in contracts.items()
         }
@@ -140,7 +181,9 @@ class ModuleRuntimeIntegrator:
                 runtime_status=runtime_status,
                 outputs=list(contract.outputs),
                 dependencies=list(contract.dependencies),
-                enabled=getattr(contract, "enabled", True),
+                enabled=self._activation_overrides().get(
+                    module_id, getattr(contract, "enabled", True)
+                ),
                 requires_modules=list(getattr(contract, "requires_modules", []) or []),
                 activation_status=activation_status,
                 activation_reason=activation_reason,

@@ -47,9 +47,21 @@ from output_panel import OutputPanel
 import sys
 from pathlib import Path
 from cea_panel import CEAPanel
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+APPLICATION_ROOT = (
+    Path(sys._MEIPASS)
+    if getattr(sys, "frozen", False)
+    else Path(__file__).resolve().parent.parent
+)
+
+if getattr(sys, "frozen", False):
+    import os
+    PROJECT_ROOT = Path(os.environ["LOCALAPPDATA"]) / "LEAF"
+    PROJECT_ROOT.mkdir(parents=True, exist_ok=True)
+else:
+    PROJECT_ROOT = APPLICATION_ROOT
+
+if str(APPLICATION_ROOT) not in sys.path:
+    sys.path.insert(0, str(APPLICATION_ROOT))
 
 from leaf_qt.storage.save_load_bridge import SaveLoadRuntimeBridge
 from leaf_qt.storage.creation_owner import ProjectDesignCreationOwner
@@ -189,10 +201,11 @@ class LeafMainWindow(QMainWindow):
         )
 
         self.module_runtime_integrator = ModuleRuntimeIntegrator(
-            PROJECT_ROOT
+            APPLICATION_ROOT
             / "leaf_qt"
             / "module_engine"
-            / "definitions"
+            / "definitions",
+            activation_file=PROJECT_ROOT / "config" / "module_activation.json",
         )
 
         self.window_launch_controller = WindowLaunchController(

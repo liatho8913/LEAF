@@ -143,8 +143,8 @@ LEAF is available as a standalone Windows x64 development build and as a Python 
 
 The Windows release bundles the Python runtime and required application dependencies, including RocketCEA. Users do not need to install Python, RocketCEA, pip or a compiler separately.
 
-1. Open the [LEAF GitHub Releases page](https://github.com/liatho8913/LEAF---Liquid-propulsion-Engine-Analysis-and-design-Framework-/releases).
-2. Download the Windows release archive named `LEAF_v0.5.2-dev_Windows_x64_RC2.zip`, if published.
+1. Open the [LEAF GitHub Releases page](https://github.com/liatho8913/LEAF/releases).
+2. Download the Windows release archive named `LEAF_v0.5.2-dev_Windows_x64_RC3.zip`.
 3. Extract the ZIP archive completely to a folder of your choice.
 4. Open the extracted `LEAF` folder.
 5. Double-click `LEAF.exe` to launch the application.
@@ -182,8 +182,8 @@ the operating system.
 Clone the repository with Git:
 
 ```bash
-git clone https://github.com/liatho8913/LEAF---Liquid-propulsion-Engine-Analysis-and-design-Framework-.git
-cd LEAF---Liquid-propulsion-Engine-Analysis-and-design-Framework-
+git clone https://github.com/liatho8913/LEAF.git
+cd LEAF
 ```
 
 Alternatively:
@@ -277,7 +277,7 @@ python -m leaf_qt.main
 | Platform | Installation status |
 |---|---|
 | macOS 15.6 (Apple Silicon / arm64) | Python 3.12.13 installation and GUI launch tested |
-| Windows | Installation and functionality not yet independently verified |
+| Windows x64 standalone (RC3) | Development-machine testing completed; clean-machine testing outstanding |
 | Linux | Installation and functionality not yet independently verified |
 
 A successful installation and application launch do not establish
@@ -564,7 +564,7 @@ The intended direction is that adding future engineering modules requires progre
 
 ## Release Status
 
-This repository is a **work-in-progress engineering demonstrator** and is currently in demonstrator release preparation.
+This repository is a **work-in-progress engineering demonstrator** with a published Windows x64 standalone prerelease (RC3).
 
 Programme 40 established the accepted live demonstrator.
 
@@ -578,6 +578,6 @@ Release-freeze work has subsequently:
 - reduced the portable engineering state from approximately 280 MiB to approximately 8.5 MiB
 - proved compact linear history growth through live save/reload calculations
 
-Final clean release staging and package-integrity verification remain before the demonstrator release is considered frozen.
+Windows RC3 archive integrity, file preservation and portable extraction have been verified. Independent clean-Windows launch testing and broader engineering validation remain outstanding. RC3 is a prerelease, not a frozen or fully qualified production release.
 
 ```

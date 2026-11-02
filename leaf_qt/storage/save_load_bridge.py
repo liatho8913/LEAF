@@ -2000,7 +2000,8 @@ class SaveLoadRuntimeBridge:
         SaveLoadRuntimeBridge._write_json(
             path,
             payload,
-            indent=4,
+            indent=None,
+            separators=(",", ":"),
         )
 
 
@@ -2616,7 +2617,8 @@ class SaveLoadRuntimeBridge:
     def _write_json(
         path: Path,
         payload: dict[str, Any],
-        indent: int = 2,
+        indent: int | None = 2,
+        separators: tuple[str, str] | None = None,
     ) -> None:
 
         if not isinstance(
@@ -2651,6 +2653,7 @@ class SaveLoadRuntimeBridge:
                     payload,
                     handle,
                     indent=indent,
+                    separators=separators,
                 )
 
                 handle.flush()

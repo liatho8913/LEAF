@@ -1,4 +1,4 @@
-from leaf_qt.structured_status_access import highest_severity as solver_highest_severity, is_pass
+from leaf_qt.structured_status_access import is_pass
 try:
     from leaf_qt.material_database import (
         PLACEHOLDER_MODE,
@@ -358,7 +358,7 @@ def _leaf_16t3q9_get_first(payload, keys, default=None):
 
 def _leaf_16t3q9_canonical_status_from_findings(findings, ready):
     severities = {str(f.get("severity", "")).upper() for f in findings}
-    if solver_highest_severity(severities) == "FAIL":
+    if "FAIL" in severities:
         return "FAIL"
     if "BLOCKED" in severities:
         return "BLOCKED"

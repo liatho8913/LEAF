@@ -313,7 +313,7 @@ def _build_report(status, blockers, explanation):
     return "\n".join(lines)
 ''')
 
-(ROOT / "project_maintenance/relocated_production_tests/programme_46g_residual_reference_rewrite/leaf_qt/test_regen_recommendation_explanation_engine_phase_16j5.py").write_text(r'''from regen_ranking_owner_source_repair import attach_regen_ranking_owner_source_repair
+(ROOT / "tests/legacy/regen/test_regen_recommendation_explanation_engine_phase_16j5.py").write_text(r'''from regen_ranking_owner_source_repair import attach_regen_ranking_owner_source_repair
 from regen_recommendation_feed_repair import attach_regen_recommendation_feed_repair
 from regen_recommendation_viewer_repair import attach_regen_recommendation_viewer_repair
 from regen_end_to_end_candidate_selection_validation import attach_regen_end_to_end_candidate_selection_validation
